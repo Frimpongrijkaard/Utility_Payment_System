@@ -1,0 +1,5 @@
+CREATE DATABASE IF NOT EXISTS Pay_db;
+CREATE USER IF NOT EXISTS 'Pay_db_user'@'localhost' IDENTIFIED BY "Pay_pwd";
+GRANTS ALL PRIVILEGES ON Pay_dev_db.* TO 'Pay_db_user'@'localhost';
+GRANTS SELECT ON performance_schema.* TO 'Pay_db_user'@'localhost';
+ 

@@ -1,15 +1,15 @@
 #!/usr/bin/python3
-import json
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from os import getenv
-from models.base_model import Base
-from sqlalchemy.ext.declarative import declarative_base
+#from models.base_model import Base
+from models.base_model import BaseModel, Base
+#from sqlalchemy.ext.declarative import declarative_base
 from models.user import User
-from models.customer import Customer
+#from models.customer import Customer
 from models.payment import Payment
-from models.utility import Utility
-from models.customutility import CustomerUtility
+#from models.utility import Utility
+from models.payment_history import PaymentHistory
 """
 module store file of any instance created write and read them
 """
@@ -31,36 +31,51 @@ class DBStorage:
         pwd = getenv('PAY_MYSQL_PWD')
         host = getenv('PAY_MYSQL_HOST')
         db = getenv('PAY_MYSQL_DB')
-        db_url = 'mysql+mysqldb://{}:{}@{}/{}?charset=utf8mb4'.format(user, pwd, host, db)
+        db_url = "mariadb://DB_user:sorry@127.0.0.1/Dbshort"#.format(user, pwd, host, db)
 
         self.__engine = create_engine(db_url, pool_pre_ping=True, echo=True)
 
-    def classes(self):
-        """ modules class for utility payment system"""
-        classes = {"BaseModel": BaseModel,
-                   "User": User,
-                   "Utility": Utility,
-                   "Customer": Customer,
-                   "Session": Session,
-                   "Payment": Payment,
-                   "CustomerUtility":CustomerUtility}
-        return classes
+    #def classes(self):
+     #   """ modules class for utility payment system"""
+        #from models.base_model import BaseModel, Base
+        #from models.user import User
+        #from models.customer import Customer
+        #from models.payment import Payment
+        #from models.utility import Utility
+        #from models.customutility import CustomerUtility
+      #  classes = {"BaseModel": BaseModel,
+       #            "User": User,
+        #           "Utility": Utility,
+         #          "Customer": Customer,
+          #         #"Session": Session,
+           #        "Payment": Payment,
+            #       "CustomerUtility":CustomerUtility}
+        #return classes
     
     def all(self, cls=None):
         """Method that retrives all object created from system"""
+        #from models.base_model import BaseModel, Base
+        #from models.user import User
+        #from models.customer import Customer
+        #from models.payment import Payment
+        #from models.utility import Utility
+        #from models.customutility import CustomerUtility
+        dic = {}
         if cls:
-            objs = self.__session.query(self.classes()[cls]).all()
+            if type(cls) is str:
+                cls = eval(cls)
+            query = self.__session.query(cls)
+            for elem in query:
+                key = "{}.{}".format(type(elem).__name__, elem.id)
+                dic[key] = elem
         else:
-            objs += self.__session.query(User).all()
-            objs += self.__session.query(Customer).all()
-            objs += self.__session.query(Payment).all()
-            objs += self.__session.query(Utility).all()
-
-        ob_dic = {}
-        for obj in objs:
-            key = "{}.{}".format(self.classes()[cls], obj.id)
-            ob_dic[cls] = obj
-        return ob_dic
+            list_1 = []#User, Customer, Utility, PaymentHistory]
+            for clase in list_1:
+                query = self.__session.query(clase)
+                for elem in query:
+                    key = "{}.{}".format(type(elem).__name__, elem.id)
+                    dic[key] = elem
+        return (dic)
     
     def new(self, obj):
        """Method created new object and it been store in DBstorage"""
@@ -71,20 +86,25 @@ class DBStorage:
 
     def reload(self):
         """creating current session for our database """
-        from models.user import User
-        from models.utility import Utility
-        from models.payment import Payment
-        from models.customer import Customer
-        from models.customutility import CustomerUtility
+        #from models.base_model import BaseModel, Base
+        #from models.user import User
+        #from models.utility import Utility
+        #from models.payment import Payment
+        #from models.customer import Customer
+        #from models.customutility import CustomerUtility
 
         Base.metadata.create_all(self.__engine)
 
-        sess = sessionmaker(bind=self.__session, expire_on_commit=False)
+        Session = sessionmaker(bind=self.__engine, expire_on_commit=False)
 
-        Session = scoped_session(sess)
+        #Session = scoped_session(ses)
 
         self.__session = Session()
 
+    def delete(self, obj=None):
+        if obj:
+            self.__session.delete(obj)
+
     def close(self):
-        return self.__session.close()
+        self.__session.close()
 

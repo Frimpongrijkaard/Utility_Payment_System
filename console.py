@@ -1,16 +1,18 @@
-!/usr/bin/env python3
+#!/usr/bin/python3
 """ A test command interpreter that is helps test our codebase 
 file from the storage base 
 """
 import cmd
-from models.base_model import BaseModel
+from models.base_model import BaseModel, Base
+import uuid
 from models import storage
 from models.user import User
-from models.payments import Payment
+from models.payment import Payment
 from models.utility import Utility
-from models.customutility import CustomerUtility
+from models.payment_history import CustomerUtility
 from models.customer import Customer
-from Datetime import Datetime
+from datetime import datetime
+import os
 import json
 
 class HBNBCommand(cmd.Cmd):
@@ -38,8 +40,20 @@ class HBNBCommand(cmd.Cmd):
         if not line:
             print("** class name missing **")
             return 
-       if line not in storage.classes():
+        if line not in storage.classes():
             print("** class doesn't exist **")
+
+       # elif os.getenv('HBNB_TYPE_STORAGE') == 'db':
+           # obj_kwargs = storage.classes()[line]()
+            #if not hasattr(obj_kwargs, 'id'):
+             #   obj_kwargs['id'] = str(uuid.uuid4())
+            #if not hasattr(obj_kwargs, 'created_at'):
+             #   obj_kwargs['created_at'] = str(datetime.now())
+            #if not hasattr(obj_kwargs, 'updated_at'):
+             #   obj_kwargs['updated_at'] = str(datetime.now())
+            #new_instance = HBNBCommand.classes[line](**obj_kwargs)
+            #new_instance.save()
+            #print(new_instance.id)
         else:
             obj = storage.classes()[line]()
             obj.save()
@@ -47,6 +61,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, line):
         """method that print string representation of instance of classses"""
+        #from models import storage
         if line == '' or line == None:
             print("** class name missing **")
         else:
@@ -65,11 +80,12 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, line):
         """method delete instance of the class for id"""
+        #from models import storage
         if line == "" or line == None:
             print("** class name missing **")
         else:
             args = line.split(" ")
-           if args[0] not in storage.classes():
+            if args[0] not in storage.classes():
                 print("** class doesn't exist **")
             elif len(args) < 2:
                 print("** instance id missing **")
@@ -84,6 +100,7 @@ class HBNBCommand(cmd.Cmd):
         """ method print string representation of all the instance
         based or not class name 
         """
+        #from models import storage
         if line != "":
             args = line.split(' ')
             if args[0] not in storage.classes():
@@ -100,6 +117,7 @@ class HBNBCommand(cmd.Cmd):
         """method update the instance of the class with an id and save the update 
         instance inside the storage.
         """
+        #from models import storage
         if len(line)  == 0:
             print(" ** class name missing **")
         else:

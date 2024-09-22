@@ -1,18 +1,20 @@
 #!/usr/bin/python3
 """Module for a customer detail for utility payment"""
 from models.base_model import BaseModel, Base
-from sqlalchemy import string, column
-from sqlalchemy.orm import ForeignKey, relationship
+from sqlalchemy import String, Column, ForeignKey
+from sqlalchemy.orm import relationship
+from models.utility import Utility
 
 class Customer(BaseModel, Base):
     """Representation for customer"""
-    __Tablename__ = "customer"
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = "customers"
 
 
-    first_name = column(string(128), unique=True, nullable=False)
-    last_name = column(string(128), unique=True, nullable=False)
-    address = column(string(128))
-    phone_number = column(string(128))
-    user_id = column(string(60), ForeignKey("user.id"), nullable=False)
-    user = relationship("User", back_populates="Customer")
-    customerutility = relationship("customerutility", back_populates='Customer')
+    first_name = Column(String(128), unique=True, nullable=False)
+    last_name = Column(String(128), unique=True, nullable=False)
+    address = Column(String(128))
+    phone_number = Column(String(128))
+    user_id = Column(String(60), ForeignKey("users.id"))
+    utility = relationship("Utility", back_populates="customers")
+    payment = relationship("Payment", back_populates='customers')
