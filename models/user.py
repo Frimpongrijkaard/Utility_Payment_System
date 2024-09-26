@@ -6,20 +6,19 @@ from datetime import datetime
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
-from models.customer import Customer
+
 
 class User(BaseModel, Base):
-
     """ Representation fusers for the reistrationn and
     login
     """
     __table_args__ = {'extend_existing': True}
     __tablename__ = 'users'
 
-    username = Column(String(128),unique=True,  nullable=False)
+    username = Column(String(128), unique=True,  nullable=False)
     email = Column(String(128), unique=True, nullable=False)
     password = Column(String(128), nullable=False)
-    customer = relationship("Customer", back_populates="users", uselist=False)
+    customer = relationship("Customer", backref="users", uselist=False)
 
 
     def hash_password(self, password):

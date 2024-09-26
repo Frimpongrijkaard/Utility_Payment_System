@@ -3,7 +3,7 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import String, Column, ForeignKey
 from sqlalchemy.orm import relationship
-from models.utility import Utility
+
 
 class Customer(BaseModel, Base):
     """Representation for customer"""
@@ -11,10 +11,9 @@ class Customer(BaseModel, Base):
     __tablename__ = "customers"
 
 
-    first_name = Column(String(128), unique=True, nullable=False)
-    last_name = Column(String(128), unique=True, nullable=False)
+    fullname = Column(String(128), unique=True, nullable=False)
     address = Column(String(128))
     phone_number = Column(String(128))
     user_id = Column(String(60), ForeignKey("users.id"))
-    utility = relationship("Utility", back_populates="customers")
-    payment = relationship("Payment", back_populates='customers')
+    utilities = relationship("Utility", overlaps="customers,utilities")
+    payments = relationship("Payment")

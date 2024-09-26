@@ -3,8 +3,6 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import String, Float, Column, DateTime ,ForeignKey
 from sqlalchemy.orm import relationship
-from models.customer import Customer
-from models.utility import Utility
 from datetime import datetime
 
 class PaymentHistory(BaseModel, Base):
@@ -16,4 +14,5 @@ class PaymentHistory(BaseModel, Base):
     status = Column(String(60), nullable=False)
     transaction_date = Column(DateTime, default=(datetime.now()), nullable=False)
     company_name = Column(String(128), nullable=False)
-    payment_id  = Column(String(60), ForeignKey("payment.id"))
+    payment_id  = Column(String(60), ForeignKey("payments.id"))
+    payment = relationship('Payment', back_populates='payment_histories')

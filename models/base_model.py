@@ -3,7 +3,7 @@
 """
 from datetime import datetime
 import uuid
-import models
+#import models
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import Column, String, DateTime
 
@@ -65,6 +65,7 @@ class BaseModel:
 
     def delete(self):
         """ Method delete the instance of the object"""
+        import models 
         models.storage.delete(self)
 
 

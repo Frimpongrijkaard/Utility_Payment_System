@@ -5,7 +5,7 @@
 }
 .main{
     width:100%;
-    background: url(Color-Backgrounds-free-download.jpg);
+    background: url('/static/images/Color-Backgrounds-free-download.jpg');
     background-position: center;
     background-size: cover;
     height: 109vh;

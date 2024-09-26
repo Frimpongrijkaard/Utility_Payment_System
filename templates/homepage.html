@@ -5,7 +5,7 @@
     
     <title>Utility Payment System</title>
     <link rel="stylesheet"  href="{{ url_for('static', filename='styles/homepage.css') }}">
-    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.png' %}?ver=2"/>
+    <link rel="icon" type="images/png"  href="{{ url_for('static',  filename='images/favicon.png' ) }}">
 
 </head>
 <body>
@@ -18,10 +18,10 @@
 
             <div class="menu">
                 <ul>
-                    <li><a href="#HOME">HOME</a></li>
-                    <li><a href="#">SERVICE</a></li>
-                    <li><a href="#">ABOUT</a></li>
-                    <li><a href="#">CONTACT</a></li>
+                    <li><a href="HOME">HOME</a></li>
+                    <li><a href="SERVICE">SERVICE</a></li>
+                    <li><a href="ABOUT">ABOUT</a></li>
+                    <li><a href="CONTACT">CONTACT</a></li>
                 </ul>
             </div>
 
@@ -34,13 +34,17 @@
 
             <div class="form">
                 <h2>login Here</h2>
-                <input type="email" name="email" placeholder="Enter Email Here">
-                <input type="password" name="password" placeholder="Enter Password Here">
-                <button class="btn"><a href="#">Login</a></button>
+                <form action="{{ url_for('login') }}" method="POST">
+                    <input type="email" name="email" placeholder="Enter Email Here">
+                    <input type="password" name="password" placeholder="Enter Password Here">
 
-                <p class="link">Don't have an account<br>
-                <a href="register.html">Sign up here</a></p>
-                <p class="liw">Log in with</p>
+                    <button class="btn"><a href="login">Login</a></button>
+                </form>
+                <form action="{{ url_for('register') }}" method="POST">
+                    <p class="link">Don't have an account<br>
+                    <a href="{{ url_for('register') }}">Sign up here</a></p>
+                    <p class="liw">Log in with</p>
+                </form>
             </div>
         </div>
     </div>

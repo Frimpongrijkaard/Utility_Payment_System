@@ -1,20 +1,17 @@
 #!/usr/bin/python3
+
+#import pymysql
+#pymysql.install_as_MySQLdb()
 from sqlalchemy import create_engine
+import sys
 from sqlalchemy.orm import sessionmaker, scoped_session
-from os import getenv
-#from models.base_model import Base
-from models.base_model import BaseModel, Base
-#from sqlalchemy.ext.declarative import declarative_base
-from models.user import User
-#from models.customer import Customer
-from models.payment import Payment
-#from models.utility import Utility
-from models.payment_history import PaymentHistory
+import os
+
 """
 module store file of any instance created write and read them
 """
-#Base = declarative_base()
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 class DBStorage:
     """
         Private class attribute:
@@ -27,39 +24,24 @@ class DBStorage:
 
     def __init__(self):
 
-        user = getenv('PAY_MYSQL_USE')
-        pwd = getenv('PAY_MYSQL_PWD')
-        host = getenv('PAY_MYSQL_HOST')
-        db = getenv('PAY_MYSQL_DB')
-        db_url = "mariadb://DB_user:sorry@127.0.0.1/Dbshort"#.format(user, pwd, host, db)
+        #user = getenv('PAY_MYSQL_USE')
+        #pwd = getenv('PAY_MYSQL_PWD')
+        #host = getenv('PAY_MYSQL_HOST')
+        #db = getenv('PAY_MYSQL_DB')
+        db_url = "mysql+pymysql://test2_user:name@127.0.0.1/test3db"#.format(user, pwd, host, db)
 
         self.__engine = create_engine(db_url, pool_pre_ping=True, echo=True)
 
-    #def classes(self):
-     #   """ modules class for utility payment system"""
-        #from models.base_model import BaseModel, Base
-        #from models.user import User
-        #from models.customer import Customer
-        #from models.payment import Payment
-        #from models.utility import Utility
-        #from models.customutility import CustomerUtility
-      #  classes = {"BaseModel": BaseModel,
-       #            "User": User,
-        #           "Utility": Utility,
-         #          "Customer": Customer,
-          #         #"Session": Session,
-           #        "Payment": Payment,
-            #       "CustomerUtility":CustomerUtility}
-        #return classes
+    
     
     def all(self, cls=None):
         """Method that retrives all object created from system"""
-        #from models.base_model import BaseModel, Base
-        #from models.user import User
-        #from models.customer import Customer
-        #from models.payment import Payment
-        #from models.utility import Utility
-        #from models.customutility import CustomerUtility
+        from models.base_model import BaseModel, Base
+        from models.user import User
+        from models.customer import Customer
+        from models.payment import Payment
+        from models.utility import Utility
+        from models.payment_history import PaymentHistory
         dic = {}
         if cls:
             if type(cls) is str:
@@ -69,7 +51,7 @@ class DBStorage:
                 key = "{}.{}".format(type(elem).__name__, elem.id)
                 dic[key] = elem
         else:
-            list_1 = []#User, Customer, Utility, PaymentHistory]
+            list_1 = [User, Customer, Utility, Payment, PaymentHistory]
             for clase in list_1:
                 query = self.__session.query(clase)
                 for elem in query:
@@ -86,20 +68,23 @@ class DBStorage:
 
     def reload(self):
         """creating current session for our database """
-        #from models.base_model import BaseModel, Base
-        #from models.user import User
-        #from models.utility import Utility
-        #from models.payment import Payment
-        #from models.customer import Customer
-        #from models.customutility import CustomerUtility
+        from models.base_model import BaseModel, Base
+        from models.user import User
+        from models.utility import Utility
+        from models.payment import Payment
+        from models.customer import Customer
+        from models.payment_history import PaymentHistory
 
         Base.metadata.create_all(self.__engine)
 
         Session = sessionmaker(bind=self.__engine, expire_on_commit=False)
 
-        #Session = scoped_session(ses)
+        
 
         self.__session = Session()
+
+    def query(self, *args):
+        return self.__session.query(*args)
 
     def delete(self, obj=None):
         if obj:
